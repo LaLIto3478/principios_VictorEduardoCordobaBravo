@@ -1,5 +1,4 @@
-package com.postgres.demorpg.controllers;
-
+package com.postgres.demopg.controllers;
 import java.util.Optional;
 import jakarta.validation.Valid;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -10,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.postgres.demorpg.models.Tweet;
-import com.postgres.demorpg.repository.TweetRepository;
+import com.postgres.demopg.models.Tweet;
+import com.postgres.demopg.repository.TweetRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

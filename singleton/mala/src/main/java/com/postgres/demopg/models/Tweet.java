@@ -1,4 +1,4 @@
-package com.postgres.demorpg.models;
+package com.postgres.demopg.models;
 
 import java.util.HashSet;
 import java.util.Set;

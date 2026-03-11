@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.postgres</groupId>
-	<artifactId>demorpg</artifactId>
+	<artifactId>demopg</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demorpg</name>
+	<name>demopg</name>
 	<description>Demo project for postgres</description>
 	<url/>
 	<licenses>
@@ -54,6 +54,7 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
@@ -67,6 +68,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.2.0</version>
 			</plugin>
 		</plugins>
 	</build>
