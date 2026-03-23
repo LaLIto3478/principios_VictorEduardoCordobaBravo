@@ -8,7 +8,7 @@ import '../models/tweet_response.dart';
 class TweetService{
 	static final TweetService _instance = TweetService._internal();
 	
-	final String baseUrl = 'http://localhost:8080/api';
+	final String baseUrl = 'https://tweeter-api-0j32.onrender.com/api';
 	late http.Client _httpClient;
 
 	// Private constructor
