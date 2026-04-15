@@ -445,7 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ================= FUNCIONALIDAD EXTRA =================
+  // ================= FUNCIONALIDAD DE BORRAR =================
 
   Future<void> _deleteTelefono(int id) async {
     setState(() => _isLoading = true);
