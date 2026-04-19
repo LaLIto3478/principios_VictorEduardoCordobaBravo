@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'services/api_service.dart';
 import 'models/marca.dart';
 import 'models/telefono.dart';
+import 'screens/login_screen.dart';
 
 void main() {
   runApp(const PhoneStoreApp());
@@ -23,7 +24,7 @@ class PhoneStoreApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: const HomeScreen(),
+      home: const LoginScreen(),
     );
   }
 }

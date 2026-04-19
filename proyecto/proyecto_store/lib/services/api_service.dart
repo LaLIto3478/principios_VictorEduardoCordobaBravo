@@ -8,7 +8,7 @@ import '../repositories/api_repository.dart';
 class ApiService implements IApiRepository {
   static final ApiService _instance = ApiService._internal();
 
-  final String baseUrl = 'https://proyecto-api-6535.onrender.com/api';
+  final String baseUrl = 'https://proyecto-apilogin.onrender.com/api';
   late http.Client _httpClient;
 
   ApiService._internal() {
