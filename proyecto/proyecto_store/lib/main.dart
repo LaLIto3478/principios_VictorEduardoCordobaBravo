@@ -126,6 +126,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   marca.nombre,
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)
               ),
+              subtitle: Text(
+                'Añadido por:  ${marca.createdBy ?? 'Desconocido'}',
+                style: TextStyle(fontSize: 12, color: Colors.grey[600], fontStyle: FontStyle.italic),
+              ),
               minTileHeight: 80,
               children: telefonosDeMarca.isEmpty
                   ? [const Padding(
@@ -193,6 +197,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   ],
                 ),
+                
+                Text(
+                  'Publicado por: ${telefono.createdBy ?? 'Desconocido'}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+
                 const SizedBox(height: 8),
                 Text(
                   telefono.descripcion,

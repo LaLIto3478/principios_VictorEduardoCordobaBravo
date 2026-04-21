@@ -11,6 +11,7 @@ class Telefono {
   final int bateriaMah;
   final String fechaSalida;
   final Marca marca;
+  final String? createdBy;
 
   Telefono({
     this.id = 0, // por defecto 0, se asignará el ID real al guardar en la base de datos
@@ -23,6 +24,7 @@ class Telefono {
     required this.bateriaMah,
     required this.fechaSalida,
     required this.marca,
+    this.createdBy,
   });
 
   factory Telefono.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class Telefono {
       bateriaMah: json['bateriaMah'] ?? 0,
       fechaSalida: json['fechaSalida'] ?? '',
       marca: Marca.fromJson(json['marca'] ?? {}),
+      createdBy: json['createdBy'] ?? null,
     );
   }
 

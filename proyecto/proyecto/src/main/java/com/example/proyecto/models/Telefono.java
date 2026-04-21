@@ -24,6 +24,7 @@ public class Telefono {
     private Integer numeroCamaras;
     private Integer bateriaMah;
     private LocalDate fechaSalida;
+    private String createdBy;
 
     // Relación de la Llave Foránea
     @ManyToOne(fetch = FetchType.EAGER)
@@ -72,4 +73,12 @@ public class Telefono {
 
     public Marca getMarca() { return marca; }
     public void setMarca(Marca marca) { this.marca = marca; }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
 }

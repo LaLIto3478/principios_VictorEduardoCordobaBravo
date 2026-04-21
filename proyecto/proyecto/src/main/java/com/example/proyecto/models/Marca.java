@@ -15,6 +15,8 @@ public class Marca {
 
     private String imagenUrl;
 
+    private String createdBy;
+
     public Marca() {}
 
     public Marca(String nombre, String imagenUrl) {
@@ -26,19 +28,30 @@ public class Marca {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getNombre() {
         return nombre;
     }
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
     public String getImagenUrl() {
         return imagenUrl;
     }
     public void setImagenUrl(String imagenUrl){
         this.imagenUrl = imagenUrl;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/marca.dart';
 import '../models/telefono.dart';
 import '../models/paginated_response.dart';
@@ -23,6 +24,17 @@ class ApiService implements IApiRepository {
     return _instance;
   }
 
+  // ================= MÉTODO AUXILIAR PARA EL TOKEN =================
+  Future<Map<String, String>> _getHeaders() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('jwt_token');
+
+    return {
+      'Content-Type': 'application/json; charset=UTF-8',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
+
   // =========== MARCAS ==========
 
   @override
@@ -43,17 +55,24 @@ class ApiService implements IApiRepository {
   @override
   Future<Marca> createMarca(Marca marca) async {
     try {
+      print('📡 Enviando solicitud para crear marca: ${marca.toJson()}');
+      final headers = await _getHeaders(); // Obtenemos las cabeceras con el JWT
       final response = await _httpClient.post(
         Uri.parse('$baseUrl/marcas'),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        headers: headers,
         body: jsonEncode(marca.toJson()),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         return Marca.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+        print('✅ Marca creada exitosamente: ${marca.toJson()}');
       } else {
+        // --- AÑADE ESTE PRINT PARA VER EL ERROR REAL EN LA CONSOLA ---
+        print('🚨 ERROR DEL SERVIDOR: Código ${response.statusCode}');
+        print('🚨 DETALLE: ${response.body}');
         throw Exception('Error al crear la marca: ${response.statusCode}');
       }
     } catch (e) {
+      print('EXCEPCIÓN AL CREAR MARCA: $e');
       throw Exception('Error al crear la marca: $e');
     }
   }
@@ -61,7 +80,11 @@ class ApiService implements IApiRepository {
   @override
   Future<void> deleteMarca(int id) async {
     try{
-      final response = await _httpClient.delete(Uri.parse('$baseUrl/marcas/$id'));
+      final headers = await _getHeaders(); // Obtenemos las cabeceras con el JWT
+      final response = await _httpClient.delete(
+        Uri.parse('$baseUrl/marcas/$id'),
+        headers: headers,
+      );
       if (response.statusCode != 200 && response.statusCode != 204) {
         throw Exception('Error al eliminar la marca: ${response.statusCode}');
       }
@@ -90,9 +113,10 @@ class ApiService implements IApiRepository {
   @override
   Future<Telefono> createTelefono(Telefono telefono) async {
     try {
+      final headers = await _getHeaders(); // Obtenemos las cabeceras con el JWT
       final response = await _httpClient.post(
         Uri.parse('$baseUrl/telefonos'),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        headers: headers,
         body: jsonEncode(telefono.toJson()),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -108,11 +132,13 @@ class ApiService implements IApiRepository {
   @override
   Future<void> deleteTelefono(int id) async {
     try {
+      final headers = await _getHeaders(); // Obtenemos las cabeceras con el JWT
       final response = await _httpClient.delete(
-          Uri.parse('$baseUrl/telefonos/$id'));
+        Uri.parse('$baseUrl/telefonos/$id'),
+        headers: headers,
+      );
       if (response.statusCode != 200 && response.statusCode != 204) {
-        throw Exception(
-            'Error al eliminar el teléfono: ${response.statusCode}');
+        throw Exception('Error al eliminar el teléfono: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Error al eliminar el teléfono: $e');

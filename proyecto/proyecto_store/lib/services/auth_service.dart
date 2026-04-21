@@ -36,6 +36,29 @@ class AuthService {
     }
   }
 
+  // --- NUEVO MÉTODO DE REGISTRO ---
+  Future<void> signup(String username, String email, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/signup'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode({
+          'username': username,
+          'email': email,
+          'password': password,
+          'role': ['user'] // Asignamos el rol básico por defecto
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['message'] ?? 'Error al registrar usuario');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Método auxiliar para cerrar sesión después
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
