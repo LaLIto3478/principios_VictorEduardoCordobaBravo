@@ -1,0 +1,272 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                  ✅ PATRONES CREACIONALES - IMPLEMENTACIÓN COMPLETA           ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+🎯 OBJETIVO COMPLETADO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ TODOS LOS 5 PATRONES CREACIONALES IMPLEMENTADOS
+
+  1. 🔐 SINGLETON          - singleton_pattern.dart
+  2. 🏭 FACTORY METHOD     - factory_method_pattern.dart
+  3. 🏢 ABSTRACT FACTORY   - abstract_factory_pattern.dart
+  4. 🔨 BUILDER            - builder_pattern.dart
+  5. 👯 PROTOTYPE          - prototype_pattern.dart
+
+
+📦 ESTRUCTURA DE CARPETAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+proyecto_store/lib/
+├── 📁 creational_patterns/               ← NUEVOS PATRONES CREACIONALES
+│   ├── 🔐 singleton_pattern.dart          ✅ Logger, Config, Cache
+│   ├── 🏭 factory_method_pattern.dart     ✅ Productos por tipo
+│   ├── 🏢 abstract_factory_pattern.dart   ✅ Tiendas por marca
+│   ├── 🔨 builder_pattern.dart            ✅ Búsquedas, construcción flexible
+│   ├── 👯 prototype_pattern.dart          ✅ Clonación de objetos
+│   ├── 📋 demo.dart                       ← Demostraciones ejecutables
+│   ├── 📖 index.dart                      ← Guía completa
+│   └── 📄 QUICK_REFERENCE.dart            ← Copiar y pegar rápido
+│
+├── 📁 models/                            (Existentes - no modificados)
+├── 📁 repositories/                      (Existentes - no modificados)
+├── 📁 services/                          (Existentes - no modificados)
+├── 📁 screens/                           (Existentes - no modificados)
+│
+├── 📄 main.dart                          (Existente - no modificado)
+├── 📄 test_creational_patterns.dart      ← Archivo de prueba
+└── 📄 CREATIONAL_PATTERNS.md             ← Documentación completa
+
+
+🎓 PATRONES IMPLEMENTADOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ SINGLETON - Instancia Única
+   ├─ Logger()              → Registrar eventos y logs
+   ├─ ConfigurationManager() → Gestionar configuración global
+   └─ CacheManager()        → Cache global compartido
+   
+   Uso: Logger().log('mensaje');
+
+2️⃣ FACTORY METHOD - Crear por Tipo
+   ├─ ProductoFactory.crearProducto()
+   ├─ Tipos: 'premium', 'estandar', 'economico'
+   └─ También: crearProductoDesdeTelefono()
+   
+   Uso: ProductoFactory.crearProducto(tipo: 'premium', ...)
+
+3️⃣ ABSTRACT FACTORY - Familias de Productos
+   ├─ MarcaFactoryGenerator.obtenerFactory('apple')
+   ├─ AppleFactory, SamsungFactory, XiaomiFactory
+   ├─ Cada factory crea: Tienda + ServicioTecnico
+   └─ Garantiza coherencia de marca
+   
+   Uso: MarcaFactoryGenerator.obtenerFactory('apple')
+           .crearTienda('New York')
+
+4️⃣ BUILDER - Construcción Paso a Paso
+   ├─ TelefonoBuscadorBuilder  → Búsquedas complejas
+   ├─ TelefonoPersonalizadoBuilder → Crear teléfonos
+   ├─ Interfaz fluida (chainable)
+   └─ Validación en build()
+   
+   Uso: TelefonoBuscadorBuilder()
+        .conMarca('Samsung')
+        .conPrecioMaximo(500)
+        .conGarantia(true)
+        .build()
+
+5️⃣ PROTOTYPE - Clonar Objetos
+   ├─ ConfiguracionTelefonoPrototype → Clonable
+   ├─ MarcaPrototype → Clonable
+   ├─ CarritoPrototype → Clonable
+   ├─ PrototypeRegistry → Registro de prototipos
+   └─ clone() + cloneConCambios()
+   
+   Uso: configBase.cloneConCambios(newNombre: 'Nuevo Nombre')
+
+
+🚀 CÓMO USAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPCIÓN 1: Ver Demostración Completa
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+En main.dart:
+
+  import 'creational_patterns/demo.dart';
+  
+  void main() {
+    demostrarTodosLosPatrones();  // ← Ejecuta todas las demos
+    runApp(const PhoneStoreApp());
+  }
+
+Luego: flutter run -v
+Resultado: Ver TODOS los patrones en acción en la consola
+
+
+OPCIÓN 2: Usar Patrones en Tu Código
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+import 'creational_patterns/factory_method_pattern.dart';
+
+class MiPantalla extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final producto = ProductoFactory.crearProducto(
+      tipo: 'premium',
+      nombre: 'iPhone 15 Pro',
+      precio: 1299.99,
+    );
+    
+    return Column(
+      children: [
+        Text(producto.nombre),
+        Text('\$${producto.precio}'),
+      ],
+    );
+  }
+}
+
+
+OPCIÓN 3: Copiar y Pegar Rápido
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Abre: QUICK_REFERENCE.dart
+Copia los ejemplos comentados y adáptalos
+
+
+📊 COMPARACIÓN RÁPIDA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Patrón              │ Propósito                  │ Complejidad │ Cuando Usar
+────────────────────┼────────────────────────────┼─────────────┼─────────────
+Singleton           │ Instancia única            │ ⭐ Baja     │ Logger, Config
+Factory Method      │ Crear por tipo             │ ⭐⭐ Media   │ Productos
+Abstract Factory    │ Familias coherentes        │ ⭐⭐⭐ Alta  │ Tiendas/marca
+Builder             │ Construcción flexible      │ ⭐⭐ Media   │ Búsquedas
+Prototype           │ Clonar objetos             │ ⭐⭐ Media   │ Copias/variantes
+
+
+📚 ARCHIVOS DE REFERENCIA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📖 CREATIONAL_PATTERNS.md
+   ├─ Introducción a patrones creacionales
+   ├─ Estructura del proyecto
+   ├─ Detalle de cada patrón
+   ├─ Ejemplos de código
+   └─ Tabla comparativa
+
+📄 lib/creational_patterns/index.dart
+   ├─ Guía de uso
+   ├─ Importar y usar
+   ├─ Estructura de carpetas
+   └─ Resumen comparativo
+
+📋 lib/creational_patterns/QUICK_REFERENCE.dart
+   ├─ Ejemplos copiar-pegar
+   ├─ Casos de uso reales
+   ├─ Checklist de implementación
+   └─ Próximos pasos
+
+📊 lib/creational_patterns/demo.dart
+   ├─ demostrarTodosLosPatrones()
+   ├─ compararPatrones()
+   ├─ guiaUso()
+   └─ ejemploIntegrado()
+
+
+✅ VERIFICACIÓN: SINGLETON PRESERVADO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// El Singleton original en ApiService SIGUE FUNCIONANDO
+import 'services/api_service.dart';
+
+final api1 = ApiService();
+final api2 = ApiService();
+print(identical(api1, api2)); // true ✅ Singleton preservado
+
+
+🎯 CASOS DE USO REALES EN TU PROYECTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ Log de eventos:
+   Logger().log('Usuario inició sesión: ${user.name}');
+
+2️⃣ Crear productos:
+   final producto = ProductoFactory.crearProducto(
+     tipo: usuario.isPremium ? 'premium' : 'economico',
+     nombre: productName,
+     precio: productPrice,
+   );
+
+3️⃣ Crear tienda por marca:
+   final factory = MarcaFactoryGenerator.obtenerFactory(marca);
+   final tienda = factory.crearTienda(ubicacion);
+
+4️⃣ Búsqueda avanzada:
+   final busqueda = TelefonoBuscadorBuilder()
+     .conMarca(marca)
+     .conPrecioMaximo(maxPrecio)
+     .conGarantia(true)
+     .build();
+
+5️⃣ Copiar carrito:
+   final carritoNuevo = carritoOriginal.clone();
+
+
+⚙️ CARACTERÍSTICAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Todos los patrones completamente implementados
+✅ Ejemplos prácticos y ejecutables
+✅ Documentación inline en cada archivo
+✅ Singleton original NO modificado
+✅ Archivos separados, no invasivos
+✅ Listos para producción
+✅ Fáciles de entender y usar
+✅ Escalables y mantenibles
+
+
+🎉 ¡PROYECTO COMPLETADO EXITOSAMENTE!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Puedes empezar a usar los patrones ahora mismo en tu proyecto.
+
+Preguntas frecuentes:
+❓ ¿Dónde uso cada patrón?
+   Ver: CREATIONAL_PATTERNS.md / guiaUso()
+
+❓ ¿Cómo copio ejemplos?
+   Ver: QUICK_REFERENCE.dart
+
+❓ ¿Necesito cambiar main.dart?
+   No necesariamente. Puedes usar en cualquier lugar.
+
+❓ ¿Se rompe el código existente?
+   No. Los nuevos patrones están en archivos separados.
+
+❓ ¿El Singleton se perdió?
+   No. ApiService sigue siendo Singleton.
+
+
+📞 PRÓXIMOS PASOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. flutter run -v
+
+2. Ver la demostración en consola
+
+3. Leer CREATIONAL_PATTERNS.md para entender cada patrón
+
+4. Integrar patrones en tus pantallas
+
+5. ¡Usar en producción!
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                    Todos los patrones creacionales listos ✨
+                              ¡Éxito en tu proyecto! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════
