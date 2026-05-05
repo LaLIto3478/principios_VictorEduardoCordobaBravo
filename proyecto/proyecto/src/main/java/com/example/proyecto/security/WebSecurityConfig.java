@@ -71,7 +71,15 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/telefonos/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/marcas/**").permitAll()
+
+                                // --- NUEVA LÍNEA: Permitimos leer los comentarios ---
+                                .requestMatchers(HttpMethod.GET, "/api/comentarios/**").permitAll()
+                                // ----------------------------------------------------
+
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                                // Esto protege automáticamente los POST de /api/comentarios
+                                // y los POST de /api/reacciones
                                 .anyRequest().authenticated()
                 );
 

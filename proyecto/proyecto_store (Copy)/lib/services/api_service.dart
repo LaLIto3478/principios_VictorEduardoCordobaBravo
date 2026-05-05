@@ -5,6 +5,7 @@ import '../models/marca.dart';
 import '../models/telefono.dart';
 import '../models/paginated_response.dart';
 import '../repositories/api_repository.dart';
+import '../models/comentario.dart';
 
 class ApiService implements IApiRepository {
   static final ApiService _instance = ApiService._internal();
@@ -142,6 +143,99 @@ class ApiService implements IApiRepository {
       }
     } catch (e) {
       throw Exception('Error al eliminar el teléfono: $e');
+    }
+  }
+
+  // ================= COMENTARIOS =================
+
+  @override
+  Future<List<Comentario>> fetchComentarios(int telefonoId) async {
+    try {
+      // Petición GET pública (no requiere _getHeaders porque lo permitimos en WebSecurityConfig)
+      final response = await _httpClient.get(
+          Uri.parse('$baseUrl/comentarios/telefono/$telefonoId')
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+        // Reutilizamos tu clase PaginatedResponse que parsea la página de Spring Boot
+        return PaginatedResponse<Comentario>.fromJson(jsonData, Comentario.fromJson).content;
+      } else {
+        throw Exception('Error al cargar los comentarios: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error al cargar los comentarios: $e');
+    }
+  }
+
+  @override
+  Future<void> createComentario(int telefonoId, String contenido) async {
+    try {
+      final headers = await _getHeaders(); // Inyectamos el JWT
+      final response = await _httpClient.post(
+        Uri.parse('$baseUrl/comentarios'),
+        headers: headers,
+        body: jsonEncode({
+          'telefonoId': telefonoId,
+          'contenido': contenido,
+        }),
+      );
+
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        throw Exception('No autorizado. Debes iniciar sesión para comentar.');
+      } else if (response.statusCode != 200 && response.statusCode != 201) {
+        throw Exception('Error al publicar el comentario: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error de conexión al publicar el comentario: $e');
+    }
+  }
+
+  // ================= REACCIONES =================
+
+  @override
+  Future<void> reaccionarTelefono(int telefonoId, int reaccionId) async {
+    try {
+      final headers = await _getHeaders(); // Inyectamos el JWT
+      final response = await _httpClient.post(
+        Uri.parse('$baseUrl/reacciones/telefono'),
+        headers: headers,
+        body: jsonEncode({
+          'targetId': telefonoId,
+          'reaccionId': reaccionId,
+        }),
+      );
+
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        throw Exception('No autorizado. Debes iniciar sesión para reaccionar.');
+      } else if (response.statusCode != 200) {
+        throw Exception('Error al enviar la reacción: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error de conexión al enviar la reacción: $e');
+    }
+  }
+
+  @override
+  Future<void> reaccionarComentario(int comentarioId, int reaccionId) async {
+    try {
+      final headers = await _getHeaders(); // Inyectamos el JWT
+      final response = await _httpClient.post(
+        Uri.parse('$baseUrl/reacciones/comentario'),
+        headers: headers,
+        body: jsonEncode({
+          'targetId': comentarioId,
+          'reaccionId': reaccionId,
+        }),
+      );
+
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        throw Exception('No autorizado. Debes iniciar sesión para reaccionar.');
+      } else if (response.statusCode != 200) {
+        throw Exception('Error al enviar la reacción: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error de conexión al enviar la reacción: $e');
     }
   }
 

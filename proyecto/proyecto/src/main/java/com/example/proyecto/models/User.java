@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users",
@@ -37,6 +38,18 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comentario> comentarios;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TelefonoReaccion> telefonoReacciones;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ComentarioReaccion> comentarioReacciones;
+
     public User() {}
     public User(String username, String email, String password) {
         this.username = username;
@@ -55,4 +68,10 @@ public class User {
     public void setPassword(String password) { this.password = password; }
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }
+    public Set<Comentario> getComentarios() { return comentarios; }
+    public void setComentarios(Set<Comentario> comentarios) { this.comentarios = comentarios; }
+    public Set<TelefonoReaccion> getTelefonoReacciones() { return telefonoReacciones; }
+    public void setTelefonoReacciones(Set<TelefonoReaccion> telefonoReacciones) { this.telefonoReacciones = telefonoReacciones; }
+    public Set<ComentarioReaccion> getComentarioReacciones() { return comentarioReacciones; }
+    public void setComentarioReacciones(Set<ComentarioReaccion> comentarioReacciones) { this.comentarioReacciones = comentarioReacciones; }
 }

@@ -3,6 +3,12 @@ package com.example.proyecto.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Map;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name="telefonos")
@@ -30,6 +36,17 @@ public class Telefono {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="marca_id", nullable = false)
     private Marca marca;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "telefono", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comentario> comentarios;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "telefono", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TelefonoReaccion> reacciones;
+
+    @Transient
+    private Map<String, Long> conteoReacciones;
 
     public Telefono() {}
 
@@ -81,4 +98,12 @@ public class Telefono {
         this.createdBy = createdBy;
     }
 
+    public List<Comentario> getComentarios() { return comentarios; }
+    public void setComentarios(List<Comentario> comentarios) { this.comentarios = comentarios; }
+
+    public Set<TelefonoReaccion> getReacciones() { return reacciones; }
+    public void setReacciones(Set<TelefonoReaccion> reacciones) { this.reacciones = reacciones; }
+
+    public Map<String, Long> getConteoReacciones() { return conteoReacciones; }
+    public void setConteoReacciones(Map<String, Long> conteoReacciones) { this.conteoReacciones = conteoReacciones; }
 }

@@ -3,6 +3,8 @@ import 'services/api_service.dart';
 import 'models/marca.dart';
 import 'models/telefono.dart';
 import 'screens/login_screen.dart';
+import 'models/reaccion_tipo.dart';
+import 'widgets/comentarios_bottom_sheet.dart';
 
 void main() {
   runApp(const PhoneStoreApp());
@@ -50,8 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadData();
   }
 
-  Future<void> _loadData() async {
-    setState(() => _isLoading = true);
+  Future<void> _loadData({bool ocultaCarga = false}) async {
+    // Solo mostramos la pantalla de carga si NO es silencioso
+    if (!ocultaCarga) {
+      setState(() => _isLoading = true);
+    }
     try {
       final marcas = await _apiService.fetchMarcas();
       final telefonos = await _apiService.fetchTelefonos();
@@ -62,7 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       _showErrorSnackBar('Error al cargar datos: $e');
     } finally {
-      setState(() => _isLoading = false);
+      if (!ocultaCarga) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -115,6 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             margin: const EdgeInsets.only(bottom: 16),
             child: ExpansionTile(
+              key: PageStorageKey('marca_${marca.id}'),
               shape: const Border(),
               leading: CircleAvatar(
                 backgroundColor: Colors.grey[200],
@@ -157,15 +165,14 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey[200]!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Imagen del teléfono
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: Container(
               height: 200,
               width: double.infinity,
@@ -197,16 +204,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   ],
                 ),
-                
                 Text(
-                  'Publicado por: ${telefono.createdBy ?? 'Desconocido'}',
+                  'Publicado por: ${telefono.createdBy ?? 'Usuario anónimo'}',
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w500
                   ),
                 ),
-
                 const SizedBox(height: 8),
                 Text(
                   telefono.descripcion,
@@ -218,6 +223,69 @@ class _HomeScreenState extends State<HomeScreen> {
                 _buildSpecRow(Icons.camera_alt, Colors.pink[100]!, Colors.pink, 'Cámaras', '${telefono.numeroCamaras} cámaras'),
                 _buildSpecRow(Icons.battery_full, Colors.green[100]!, Colors.green, 'Batería', '${telefono.bateriaMah} mAh'),
                 _buildSpecRow(Icons.calendar_today, Colors.orange[100]!, Colors.orange, 'Lanzamiento', telefono.fechaSalida),
+
+                // --- NUEVO: SECCIÓN DE REACCIONES Y COMENTARIOS ---
+                const Divider(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Fila de botones de reacción
+                    Row(
+                      children: ReaccionTipo.values.map((tipo) {
+                        // Extraemos el contador, si no existe es 0
+                        final int count = telefono.conteoReacciones[tipo.nombreDb] ?? 0;
+
+                        return InkWell(
+                          onTap: () async {
+                            try {
+                              await _apiService.reaccionarTelefono(telefono.id, tipo.id);
+                              // Refrescamos los datos para ver el contador actualizarse
+                              _loadData(ocultaCarga: true);
+                            } catch (e) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString().replaceAll('Exception: ', '')), backgroundColor: Colors.red),
+                                );
+                              }
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(16),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            child: Row(
+                              children: [
+                                Text(tipo.emoji, style: const TextStyle(fontSize: 22)),
+                                // Solo mostramos el número si es mayor a 0
+                                if (count > 0) ...[
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    count.toString(),
+                                    style: TextStyle(color: Colors.grey[700], fontSize: 16, fontWeight: FontWeight.bold),
+                                  ),
+                                ]
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+
+                    // Botón para abrir comentarios
+                    TextButton.icon(
+                      icon: const Icon(Icons.comment_outlined),
+                      label: const Text('Comentarios'),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true, // Permite que el teclado no tape el modal
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => ComentariosBottomSheet(telefonoId: telefono.id),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                // --------------------------------------------------
               ],
             ),
           )
@@ -440,6 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           bateriaMah: int.tryParse(bateriaController.text) ?? 0,
                           fechaSalida: fechaController.text,
                           marca: marcaSeleccionada!,
+                          conteoReacciones: {}, // Iniciamos con un mapa vacío, el backend se encargará de llenarlo
                         );
                         await _apiService.createTelefono(nuevoTel);
                         _showSuccessSnackBar('Teléfono agregado correctamente');

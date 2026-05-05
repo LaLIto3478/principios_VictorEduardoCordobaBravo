@@ -11,6 +11,8 @@ import com.example.proyecto.repositories.TelefonoRepository;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -21,7 +23,16 @@ public class TelefonoController {
 
     @GetMapping("")
     public Page<Telefono> getTelefonos(Pageable pageable){
-        return telefonoRepository.findAll(pageable);
+        Page<Telefono> telefonos = telefonoRepository.findAll(pageable); // (O la línea que ya tengas)
+
+        telefonos.forEach(telefono -> {
+            Map<String, Long> conteo = telefono.getReacciones().stream()
+                    .collect(Collectors.groupingBy(tr -> tr.getReaccion().getNombre().name(), Collectors.counting()));
+            telefono.setConteoReacciones(conteo);
+        });
+        // -------------------'
+
+        return telefonos;
     }
 
     @PostMapping("")
